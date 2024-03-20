@@ -5,3 +5,7 @@
 * { @apply truncate outline-none select-none cursor-grab active:cursor-grabbing }
 
 html, body, main { @apply relative w-full h-full }
+
+.loading { background: url("/img/loading.gif") no-repeat center center /auto 100%;}
+.background { background: url("/img/background.png") repeat center center /auto; opacity: 0.8;}
+.controller { background: url("/img/controller.png") repeat center center /100%;}

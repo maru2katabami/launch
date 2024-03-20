@@ -10,8 +10,8 @@ import Lights from "@/cmp/three/lights"
 import Controls from "@/cmp/controls"
 
 const Earth = () => {
-  const { nodes } = useGLTF("/earth.glb")
-  const [ ref, api ] = useSphere(() => ({ type: "Static", args: [ 5 ], position: [ 0, 0, 0 ]}), useRef())
+  const { nodes } = useGLTF("/glb/earth.glb")
+  const [ ref, api ] = useSphere(() => ({ type: "Static", args: [ 5.85 ], position: [ 0, 0, 0 ]}), useRef())
   return(
     <mesh ref={ ref }>
       <primitive ref={ ref } object={ nodes.earth }/>
@@ -20,8 +20,8 @@ const Earth = () => {
 }
 
 const Moon = () => {
-  const { nodes } = useGLTF("/moon.glb")
-  const [ ref, api ] = useSphere(() => ({ type: "Static", args: [ 1.36 ], position: [ 0, 300, 0 ]}), useRef())
+  const { nodes } = useGLTF("/glb/moon.glb")
+  const [ ref, api ] = useSphere(() => ({ type: "Static", args: [ 1.36 ], position: [ 0, 384, 0 ]}), useRef())
   return(
     <mesh ref={ ref }>
       <primitive ref={ ref } object={ nodes.moon }/>
@@ -33,9 +33,9 @@ const Moon = () => {
 const Rocket = () => {
 
   const { position, setPosition, velocity, setVelocity, rotation, setRotation, injection } = useZustand()
-  const { nodes } = useGLTF("/rocket.glb")
+  const { nodes } = useGLTF("/glb/rocket.glb")
 
-  const opts = { mass: 1, position: [ 0, 6, 0 ]}
+  const opts = { mass: 1, position: [ 0, 7, 0 ]}
   const [ ref, _ref ] = useTrimesh(() => ({ args: [ nodes.rocket.geometry.attributes.position.array, nodes.rocket.geometry.index.array ], ...opts }), useRef())
   const [ tip, _tip ] = useSphere(() => ({ args: [ 0.08 ], ...opts }), useRef())
   const [ end, _end ] = useSphere(() => ({ args: [ 0.08 ], ...opts }), useRef())
@@ -56,7 +56,8 @@ const Rocket = () => {
     const distanceToEarth = rocketPosition.distanceTo( earthPosition )
     const distanceToMoon = rocketPosition.distanceTo( moonPosition )
     const dir = new THREE.Vector3( 0, 1, 0 ).applyEuler( new THREE.Euler( ...rotation, "XYZ"))
-    _tip.applyImpulse([ dir.x * ( 0.06 * injection.x ), dir.y * ( 0.06 * injection.y ), dir.z * ( 0.06 * injection.z ) ], [ 0, 0, 0 ])
+    _ref.applyImpulse([ dir.x * ( 0.06 * injection.x ), dir.y * ( 0.06 * injection.x ), dir.z * ( 0.06 * injection.x ) ], [ 0, 0, 0 ])
+    _tip.applyImpulse([ dir.x * ( 0.06 * injection.y ), dir.y * ( 0.06 * injection.y ), dir.z * ( 0.06 * injection.y ) ], [ 0, 0, 0 ])
 
     if( distanceToEarth <= 30 ) {
       const v = rocketPosition.normalize().multiplyScalar( -0.0024 * ( 30 - distanceToEarth ))
@@ -78,7 +79,7 @@ const Rocket = () => {
 const Page = () => {
   const { position, launch } = useZustand()
   return (
-    <Suspense fallback={ null }>
+    <Suspense fallback={<div className="w-full h-full loading"/>}>
       <main>
         <Canvas style={{ background: "black"}} camera={{ position: [ 0, 6, 5 ]}}>
           <OrbitControls target={ position }/>
